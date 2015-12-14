@@ -76,7 +76,7 @@ public class DaVinciDaemon implements GoogleApiClient.ConnectionCallbacks, Messa
         try {
             Bitmap bitmap = Picasso.with(mContext)
                     .load(url)
-                            //.transform(new ResizeTransformation(300))
+                    //.transform(new ResizeTransformation(300))
                     .get();
 
             Log.d(TAG, "image getted " + url);
@@ -186,7 +186,7 @@ public class DaVinciDaemon implements GoogleApiClient.ConnectionCallbacks, Messa
     }
 
     public void into(final String path) {
-        if(path != null && !path.trim().isEmpty()) {
+        if (path != null && !path.trim().isEmpty()) {
             if (mUrl == null) {
                 Log.d(TAG, "must execute .load(url) before");
             } else {
@@ -218,12 +218,12 @@ public class DaVinciDaemon implements GoogleApiClient.ConnectionCallbacks, Messa
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.d(TAG,messageEvent.toString());
+        Log.d(TAG, messageEvent.toString());
     }
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
-        Log.d(TAG,dataEvents.toString());
+        Log.d(TAG, dataEvents.toString());
     }
 
     @Override
@@ -244,7 +244,7 @@ public class DaVinciDaemon implements GoogleApiClient.ConnectionCallbacks, Messa
         }
     }
 
-    public static interface CallBack {
+    public interface CallBack {
         void onBitmapSent(String url, String path);
 
         void onBitmapError(String url, String path);

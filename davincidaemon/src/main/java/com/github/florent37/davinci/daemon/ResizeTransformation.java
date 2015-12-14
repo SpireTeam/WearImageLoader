@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 
 import com.squareup.picasso.Transformation;
 
-/**
- * Created by florentchampigny on 22/03/15.
- */
 public class ResizeTransformation implements Transformation {
     private int targetWidth;
 
@@ -28,6 +25,6 @@ public class ResizeTransformation implements Transformation {
 
     @Override
     public String key() {
-        return "ResizeTransformation"+targetWidth;
+        return "ResizeTransformation" + targetWidth;
     }
 }

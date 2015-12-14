@@ -86,7 +86,7 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
         this.mSize = size;
         this.mContext = context;
         this.mImagesCache = new LruCache<>(mSize);
-        this.mDiskImageCache= new DiskLruImageCache(mContext, TAG, cacheSize, Bitmap.CompressFormat.PNG, 100);
+        this.mDiskImageCache = new DiskLruImageCache(mContext, TAG, cacheSize, Bitmap.CompressFormat.PNG, 100);
 
         this.mPlaceHolder = new ColorDrawable(Color.TRANSPARENT);
 
@@ -699,19 +699,26 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         for (DataEvent dataEvent : dataEvents) {
-            String path = dataEvent.getDataItem().getUri().getPath();
+            final String path = dataEvent.getDataItem().getUri().getPath();
             Log.d(TAG, "onDataChanged(" + path + ")");
             if (path.startsWith(DAVINCI_PATH)) { //if it's a davinci path
                 Log.d(TAG, "davinci-onDataChanged " + path);
 
                 //download the bitmap and add it to cache
-                Asset asset = DataMapItem.fromDataItem(dataEvent.getDataItem()).getDataMap().getAsset(DAVINCI_ASSET_IMAGE);
-                Bitmap bitmap = loadBitmapFromAsset(asset);
-                if (bitmap != null)
-                    saveBitmap(getKey(path), bitmap);
+                final Asset asset = DataMapItem.fromDataItem(dataEvent.getDataItem()).getDataMap().getAsset(DAVINCI_ASSET_IMAGE);
 
-                //callbacks
-                callIntoWaiting(path);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap bitmap = loadBitmapFromAsset(asset);
+                        if (bitmap != null) {
+                            saveBitmap(getKey(path), bitmap);
+                        }
+
+                        //callbacks
+                        callIntoWaiting(path);
+                    }
+                }).start();
             }
         }
     }
