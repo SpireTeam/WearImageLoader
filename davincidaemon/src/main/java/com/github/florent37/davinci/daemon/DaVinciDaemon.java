@@ -144,12 +144,19 @@ public class DaVinciDaemon implements GoogleApiClient.ConnectionCallbacks, Messa
                         Wearable.DataApi.putDataItem(mApiClient, putDataMapRequest.asPutDataRequest()).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                             @Override
                             public void onResult(DataApi.DataItemResult dataItemResult) {
+
+                                boolean isSuccess = dataItemResult.getStatus().isSuccess();
+
+                                if (isSuccess) {
+                                    Log.d(TAG, url + " send");
+                                } else {
+                                    Log.d(TAG, url + " send error");
+                                }
+
                                 if (mCallBack != null) {
-                                    if (dataItemResult.getStatus().isSuccess()) {
-                                        Log.d(TAG, url + " send");
+                                    if (isSuccess) {
                                         mCallBack.onBitmapSent(url, finalPath);
                                     } else {
-                                        Log.d(TAG, url + " send error");
                                         mCallBack.onBitmapError(url, finalPath);
                                     }
                                 }

@@ -36,9 +36,9 @@ import com.google.android.gms.wearable.Wearable;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MessageApi.MessageListener, DataApi.DataListener {
@@ -60,7 +60,8 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
     private LruCache<Integer, Bitmap> mImagesCache;
     private DiskLruImageCache mDiskImageCache;
 
-    private Map<String, ArrayList<WaintingContainer>> mIntoWaiting = new HashMap<>();
+    private final Object mIntoWaitingSync = new Object();
+    private Map<String, ArrayList<WaintingContainer>> mIntoWaiting = new ConcurrentHashMap<>();
 
     private GoogleApiClient mApiClient;
 
@@ -525,23 +526,24 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
 
     private void addIntoWaiting(final String path, final Object into, final Transformation transformation) {
         final String pathId = path.hashCode() + "";
-        synchronized (mIntoWaiting) {
-            if (path != null && into != null && mIntoWaiting != null) {
-                ArrayList<WaintingContainer> intos = mIntoWaiting.get(pathId);
-                WaintingContainer waintingContainer = new WaintingContainer(into, transformation);
+        //synchronized (mIntoWaitingSync) {
+        if (into != null && mIntoWaiting != null) {
+            ArrayList<WaintingContainer> intos = mIntoWaiting.get(pathId);
+            WaintingContainer waintingContainer = new WaintingContainer(into, transformation);
 
-                if (intos == null) {
-                    intos = new ArrayList<>();
+            if (intos == null) {
+                intos = new ArrayList<>();
+                intos.add(waintingContainer);
+                mIntoWaiting.put(pathId, intos);
+            } else {
+                //already waitings for this path
+                if (!intos.contains(waintingContainer))
                     intos.add(waintingContainer);
-                    mIntoWaiting.put(pathId, intos);
-                    sendMessage(DAVINCI_PATH, path);
-                } else {
-                    //already waitings for this path
-                    if (!intos.contains(waintingContainer))
-                        intos.add(waintingContainer);
-                }
             }
+
+            sendMessage(DAVINCI_PATH, path);
         }
+        //}
     }
 
     private void callIntoWaiting(final String path) {
@@ -551,15 +553,17 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
         Log.d(TAG, "callIntoWaiting " + path);
         Log.d(TAG, "mIntoWaiting=" + mIntoWaiting.toString());
 
-        synchronized (mIntoWaiting) {
-            if (mIntoWaiting != null) {
+        //synchronized (mIntoWaitingSync) {
+        if (mIntoWaiting != null) {
 
-                //retrieve the waiting callbacks
-                ArrayList<WaintingContainer> intos = mIntoWaiting.get(pathId);
-                if (intos != null) {
-                    for (int i = 0; i < intos.size(); ++i) {
-                        WaintingContainer waintingContainer = intos.get(i);
-                        final Object into = waintingContainer.getInto();
+            //retrieve the waiting callbacks
+            ArrayList<WaintingContainer> intos = mIntoWaiting.get(pathId);
+            if (intos != null) {
+                for (int i = 0; i < intos.size(); ++i) {
+                    WaintingContainer waintingContainer = intos.get(i);
+                    final Object into = waintingContainer.getInto();
+
+                    if (into != null) {
                         final Transformation transformation = waintingContainer.getTransformation();
                         Log.d(TAG, "callIntoWaiting-loadImage " + path + " into " + into.getClass().toString());
 
@@ -571,13 +575,14 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
                         //download the bitmap from bluetooth or retrieve from cache, and send it to callback
                         loadImage(path, into, transformation);
                     }
-
-                    //clear the waitings for this path
-                    intos.clear();
-                    mIntoWaiting.remove(pathId);
                 }
+
+                //clear the waitings for this path
+                intos.clear();
+                mIntoWaiting.remove(pathId);
             }
         }
+        //}
     }
 
     //region DataApi
@@ -603,8 +608,7 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
                 final DataMapItem dataMapItem = DataMapItem.fromDataItem(result.getDataItem());
                 final Asset firstAsset = dataMapItem.getDataMap().getAsset(imageAssetName);
                 if (firstAsset != null) {
-                    Bitmap bitmap = loadBitmapFromAsset(firstAsset);
-                    return bitmap;
+                    return loadBitmapFromAsset(firstAsset);
                 }
             }
         }
