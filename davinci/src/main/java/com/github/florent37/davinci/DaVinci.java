@@ -60,7 +60,6 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
     private LruCache<Integer, Bitmap> mImagesCache;
     private DiskLruImageCache mDiskImageCache;
 
-    private final Object mIntoWaitingSync = new Object();
     private Map<String, ArrayList<WaintingContainer>> mIntoWaiting = new ConcurrentHashMap<>();
 
     private GoogleApiClient mApiClient;
@@ -526,7 +525,7 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
 
     private void addIntoWaiting(final String path, final Object into, final Transformation transformation) {
         final String pathId = path.hashCode() + "";
-        //synchronized (mIntoWaitingSync) {
+
         if (into != null && mIntoWaiting != null) {
             ArrayList<WaintingContainer> intos = mIntoWaiting.get(pathId);
             WaintingContainer waintingContainer = new WaintingContainer(into, transformation);
@@ -543,7 +542,6 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
 
             sendMessage(DAVINCI_PATH, path);
         }
-        //}
     }
 
     private void callIntoWaiting(final String path) {
@@ -553,7 +551,6 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
         Log.d(TAG, "callIntoWaiting " + path);
         Log.d(TAG, "mIntoWaiting=" + mIntoWaiting.toString());
 
-        //synchronized (mIntoWaitingSync) {
         if (mIntoWaiting != null) {
 
             //retrieve the waiting callbacks
@@ -582,7 +579,6 @@ public class DaVinci implements GoogleApiClient.ConnectionCallbacks, GoogleApiCl
                 mIntoWaiting.remove(pathId);
             }
         }
-        //}
     }
 
     //region DataApi
