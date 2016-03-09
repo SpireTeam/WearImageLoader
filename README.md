@@ -123,14 +123,14 @@ WearImageLoader.with(context).load(url).transform(new ResizeTransformation(maxWi
 Download
 --------
 
-In your wear module [![Download](https://api.bintray.com/packages/florent37/maven/DaVinci/images/download.svg)](https://bintray.com/florent37/maven/DaVinci/_latestVersion)
+In your wear module
 ```groovy
-compile 'de.mdxdave.WearImageLoader:WearImageLoader:1.1.1@aar';
+compile 'de.mdxdave.WearImageLoader:WearImageLoader:1.1.1';
 ```
 
-In your smartphone module  [![Download](https://api.bintray.com/packages/florent37/maven/DaVinciDaemon/images/download.svg)](https://bintray.com/florent37/maven/DaVinciDaemon/_latestVersion)
+In your smartphone module 
 ```groovy
-compile 'de.mdxdave.WearImageLoader:Daemon:1.1.1@aar';
+compile 'de.mdxdave.WearImageLoader:Daemon:1.1.1';
 ```
 
 Don't forget to add WRITE_EXTERNAL_STORAGE in your Wear AndroidManifest.xml
