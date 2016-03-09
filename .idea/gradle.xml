@@ -9,8 +9,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/WearImageLoader" />
-            <option value="$PROJECT_DIR$/WearImageLoaderDaemon" />
+            <option value="$PROJECT_DIR$/Daemon" />
+            <option value="$PROJECT_DIR$/Loader" />
             <option value="$PROJECT_DIR$/mobile" />
             <option value="$PROJECT_DIR$/wear" />
           </set>
@@ -18,8 +18,8 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/WearImageLoader" />
-            <option value="$PROJECT_DIR$/WearImageLoaderDaemon" />
+            <option value="$PROJECT_DIR$/Daemon" />
+            <option value="$PROJECT_DIR$/Loader" />
             <option value="$PROJECT_DIR$/mobile" />
             <option value="$PROJECT_DIR$/wear" />
           </set>

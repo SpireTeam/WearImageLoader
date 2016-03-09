@@ -25,6 +25,6 @@ dependencies {
     wearApp project(':wear')
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile project(':WearImageLoaderDaemon')
+    compile project(':Daemon')
     compile 'com.google.android.gms:play-services:8.4.0'
 }

@@ -47,12 +47,12 @@ public class WearImageLoader implements GoogleApiClient.ConnectionCallbacks, Goo
     public static final String TAG = WearImageLoader.class.getCanonicalName();
 
     private static final int DEFAULT_SIZE = 10;
-    private final static String MESSAGE_WearImageLoader = "WearImageLoader";
-    private final static String WearImageLoader_PATH = "/WearImageLoader/";
+    private final static String MESSAGE_WEARIMAGELOADER = "WearImageLoader";
+    private final static String WEARIMAGELOADER_PATH = "/WearImageLoader/";
 
-    private final static String WearImageLoader_ASSET_IMAGE = "image";
+    private final static String WEARIMAGELOADER_ASSET_IMAGE = "image";
 
-    private String imageAssetName = WearImageLoader_ASSET_IMAGE;
+    private String imageAssetName = WEARIMAGELOADER_ASSET_IMAGE;
 
     private final int cacheSize = 20 * 1024 * 1024; //20mo of disk cache
 
@@ -433,7 +433,7 @@ public class WearImageLoader implements GoogleApiClient.ConnectionCallbacks, Goo
         int key = path.hashCode();
 
         if (isUrlPath(path)) {
-            final String imagePath = WearImageLoader_PATH + key;
+            final String imagePath = WEARIMAGELOADER_PATH + key;
             key = imagePath.hashCode();
 
             Log.d(TAG, "key " + path + " = " + imagePath + " key=" + key);
@@ -541,13 +541,13 @@ public class WearImageLoader implements GoogleApiClient.ConnectionCallbacks, Goo
                     intos.add(waintingContainer);
             }
 
-            sendMessage(WearImageLoader_PATH, path);
+            sendMessage(WEARIMAGELOADER_PATH, path);
         }
     }
 
     private void callIntoWaiting(final String path) {
 
-        final String pathId = path.replace(WearImageLoader_PATH, "");
+        final String pathId = path.replace(WEARIMAGELOADER_PATH, "");
 
         Log.d(TAG, "callIntoWaiting " + path);
         Log.d(TAG, "mIntoWaiting=" + mIntoWaiting.toString());
@@ -702,11 +702,11 @@ public class WearImageLoader implements GoogleApiClient.ConnectionCallbacks, Goo
         for (DataEvent dataEvent : dataEvents) {
             final String path = dataEvent.getDataItem().getUri().getPath();
             Log.d(TAG, "onDataChanged(" + path + ")");
-            if (path.startsWith(WearImageLoader_PATH)) { //if it's a WearImageLoader path
+            if (path.startsWith(WEARIMAGELOADER_PATH)) { //if it's a WearImageLoader path
                 Log.d(TAG, "WearImageLoader-onDataChanged " + path);
 
                 //download the bitmap and add it to cache
-                final Asset asset = DataMapItem.fromDataItem(dataEvent.getDataItem()).getDataMap().getAsset(WearImageLoader_ASSET_IMAGE);
+                final Asset asset = DataMapItem.fromDataItem(dataEvent.getDataItem()).getDataMap().getAsset(WEARIMAGELOADER_ASSET_IMAGE);
 
                 new Thread(new Runnable() {
                     @Override

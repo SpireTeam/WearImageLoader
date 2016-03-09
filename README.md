@@ -12,26 +12,26 @@ Usage
 
 Use WearImageLoader from your SmartWatch app
 ```java
-WearImageLoader.with(context).load("/image/0").into(imageView);
-WearImageLoader.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(imageView);
+Loader.with(context).load("/image/0").into(imageView);
+Loader.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(imageView);
 ```
 
 Into an imageview
 ```java
-WearImageLoader.with(context).load("/image/0").into(imageView);
+Loader.with(context).load("/image/0").into(imageView);
 ```
 
 Into a FragmentGridPagerAdapter
 ```java
 @Override
 public Drawable getBackgroundForRow(final int row) {
-    return WearImageLoader.with(context).load("/image/" + row).into(this, row);
+    return Loader.with(context).load("/image/" + row).into(this, row);
 }
 ```
 
 Into a CallBack
 ```java
-DaVinci.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(new WearImageLoader.Callback() {
+Loader.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(new WearImageLoader.Callback() {
             @Override
             public void onBitmapLoaded(String path, Bitmap bitmap) {
 
@@ -41,7 +41,7 @@ DaVinci.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(new WearImageL
 
 By default, the asset name used for the bitmap is "image", you can modify this 
 ```java
-WearImageLoader.with(context).load("/image/0").setImageAssetName("myImage").into(imageView);
+Loader.with(context).load("/image/0").setImageAssetName("myImage").into(imageView);
 ```
 
 Send Bitmaps
@@ -52,7 +52,7 @@ In your smartphone service
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
-        WearImageLoaderDaemon.with(getApplicationContext()).handleMessage(messageEvent);
+        Daemon.with(getApplicationContext()).handleMessage(messageEvent);
         ...
     }
 ```
@@ -62,12 +62,12 @@ Preload Bitmaps
 
 Send image to wear
 ```java
-WearImageLoaderDaemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").send();
+Daemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").send();
 ```
 
 or with "/image/0" path
 ```java
-WearImageLoaderDaemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").into("/image/0");
+Daemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").into("/image/0");
 ```
 
 Image Transformation
@@ -105,19 +105,19 @@ public class ResizeTransformation implements Transformation {
 Pass an instance of this class to the transform method
 
 ```java
-WearImageLoader.with(context).load(url).transform(new ResizeTransformation(300)).into(imageView);
+Loader.with(context).load(url).transform(new ResizeTransformation(300)).into(imageView);
 ```
 
 Prodvided Transformations :
 
 **Blur**
 ```java
-WearImageLoader.with(context).load(url).transform(new BlurTransformation()).into(imageView);
+Loader.with(context).load(url).transform(new BlurTransformation()).into(imageView);
 ```
 
 **Resizing**
 ```java
-WearImageLoader.with(context).load(url).transform(new ResizeTransformation(maxWidth)).into(imageView);
+Loader.with(context).load(url).transform(new ResizeTransformation(maxWidth)).into(imageView);
 ```
 
 Include
@@ -136,12 +136,12 @@ allprojects {
 
 In your wear module
 ```groovy
-compile 'de.mdxdave.WearImageLoader:WearImageLoader:1.1.1';
+compile 'de.mdxdave.WearImageLoader:Loader:1.1.1';
 ```
 
 In your smartphone module 
 ```groovy
-compile 'de.mdxdave.WearImageLoader:WearImageLoaderDaemon:1.1.1';
+compile 'de.mdxdave.WearImageLoader:Daemon:1.1.1';
 ```
 
 Don't forget to add WRITE_EXTERNAL_STORAGE in your Wear AndroidManifest.xml
@@ -165,6 +165,9 @@ Dependencies
 
 Changelog
 -------
+
+**1.1.2**
+- Bugfixes
 
 **1.1.1**
 - Made runnable again

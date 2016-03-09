@@ -1,1 +1,1 @@
-include ':mobile', ':wear', ':WearImageLoader', ':WearImageLoaderDaemon'
+include ':mobile', ':wear', ':Loader', ':Daemon'

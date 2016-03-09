@@ -34,11 +34,11 @@ public class WearImageLoaderDaemon implements GoogleApiClient.ConnectionCallback
     private CallBack mCallBack;
     private String mUrl;
 
-    private static final String DEFAULT_PATH = "/davinci/";
+    private static final String DEFAULT_PATH = "/WearImageLoader/";
     private String imageAssetName = "image";
 
-    private final static String MESSAGE_DAVINCI = "/davinci/";
-    private final static String DAVINCI_PATH = "/davinci/";
+    private final static String MESSAGE_WEARIMAGELOADER = "/WearImageLoader/";
+    private final static String WEARIMAGELOADER_PATH = "/WearImageLoader/";
 
     private static WearImageLoaderDaemon INSTANCE;
 
@@ -241,12 +241,12 @@ public class WearImageLoaderDaemon implements GoogleApiClient.ConnectionCallback
     public void handleMessage(MessageEvent messageEvent) {
         final String path = messageEvent.getPath();
 
-        if (path.equals(MESSAGE_DAVINCI)) {
+        if (path.equals(MESSAGE_WEARIMAGELOADER)) {
             String message = new String(messageEvent.getData());
             if (message.startsWith("http") || message.startsWith("www")) {
                 String sendPath = message.hashCode() + "";
 
-                load(message).into(DAVINCI_PATH + sendPath);
+                load(message).into(WEARIMAGELOADER_PATH + sendPath);
             }
         }
     }
