@@ -1,38 +1,37 @@
 DaVinci
 =======
 
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-DaVinci-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1678)
-[![Android Weekly](https://img.shields.io/badge/android--weekly-147-blue.svg)](http://androidweekly.net/issues/issue-147)
+[![Release](https://jitpack.io/v/de.mdxdave/WearImageLoader.svg?style=flat-square)](https://jitpack.io/#de.mdxdave/WearImageLoader)
 
 ![Alt DaVinciDroid](https://raw.githubusercontent.com/florent37/DaVinci/master/mobile/src/main/res/drawable-hdpi/davinci_new_small.jpg)
 
-DaVinci is an image downloading and caching library for Android Wear
+WearImageLoader is an image downloading and caching library for Android Wear
 
 Usage
 --------
 
-Use DaVinci from your SmartWatch app
+Use WearImageLoader from your SmartWatch app
 ```java
-DaVinci.with(context).load("/image/0").into(imageView);
-DaVinci.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(imageView);
+WearImageLoader.with(context).load("/image/0").into(imageView);
+WearImageLoader.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(imageView);
 ```
 
 Into an imageview
 ```java
-DaVinci.with(context).load("/image/0").into(imageView);
+WearImageLoader.with(context).load("/image/0").into(imageView);
 ```
 
 Into a FragmentGridPagerAdapter
 ```java
 @Override
 public Drawable getBackgroundForRow(final int row) {
-    return DaVinci.with(context).load("/image/" + row).into(this, row);
+    return WearImageLoader.with(context).load("/image/" + row).into(this, row);
 }
 ```
 
 Into a CallBack
 ```java
-DaVinci.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(new DaVinci.Callback() {
+DaVinci.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(new WearImageLoader.Callback() {
             @Override
             public void onBitmapLoaded(String path, Bitmap bitmap) {
 
@@ -42,7 +41,7 @@ DaVinci.with(context).load("http://i.imgur.com/o3ELrbX.jpg").into(new DaVinci.Ca
 
 By default, the asset name used for the bitmap is "image", you can modify this 
 ```java
-DaVinci.with(context).load("/image/0").setImageAssetName("myImage").into(imageView);
+WearImageLoader.with(context).load("/image/0").setImageAssetName("myImage").into(imageView);
 ```
 
 Send Bitmaps
@@ -53,7 +52,7 @@ In your smartphone service
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
-        DaVinciDaemon.with(getApplicationContext()).handleMessage(messageEvent);
+        WearImageLoaderDaemon.with(getApplicationContext()).handleMessage(messageEvent);
         ...
     }
 ```
@@ -63,12 +62,12 @@ Preload Bitmaps
 
 Send image to wear
 ```java
-DaVinciDaemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").send();
+WearImageLoaderDaemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").send();
 ```
 
 or with "/image/0" path
 ```java
-DaVinciDaemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").into("/image/0");
+WearImageLoaderDaemon.with(getApplicationContext()).load("http://i.imgur.com/o3ELrbX.jpg").into("/image/0");
 ```
 
 Image Transformation
@@ -106,19 +105,19 @@ public class ResizeTransformation implements Transformation {
 Pass an instance of this class to the transform method
 
 ```java
-DaVinci.with(context).load(url).transform(new ResizeTransformation(300)).into(imageView);
+WearImageLoader.with(context).load(url).transform(new ResizeTransformation(300)).into(imageView);
 ```
 
 Prodvided Transformations :
 
 **Blur**
 ```java
-DaVinci.with(context).load(url).transform(new BlurTransformation()).into(imageView);
+WearImageLoader.with(context).load(url).transform(new BlurTransformation()).into(imageView);
 ```
 
 **Resizing**
 ```java
-DaVinci.with(context).load(url).transform(new ResizeTransformation(maxWidth)).into(imageView);
+WearImageLoader.with(context).load(url).transform(new ResizeTransformation(maxWidth)).into(imageView);
 ```
 
 Download
@@ -126,16 +125,12 @@ Download
 
 In your wear module [![Download](https://api.bintray.com/packages/florent37/maven/DaVinci/images/download.svg)](https://bintray.com/florent37/maven/DaVinci/_latestVersion)
 ```groovy
-compile ('com.github.florent37:davinci:1.0.3@aar'){
-    transitive = true
-}
+compile 'de.mdxdave.WearImageLoader:WearImageLoader:1.1.1@aar';
 ```
 
 In your smartphone module  [![Download](https://api.bintray.com/packages/florent37/maven/DaVinciDaemon/images/download.svg)](https://bintray.com/florent37/maven/DaVinciDaemon/_latestVersion)
 ```groovy
-compile ('com.github.florent37:davincidaemon:1.0.3@aar'){
-     transitive = true
-}
+compile 'de.mdxdave.WearImageLoader:Daemon:1.1.1@aar';
 ```
 
 Don't forget to add WRITE_EXTERNAL_STORAGE in your Wear AndroidManifest.xml
@@ -150,15 +145,6 @@ TODO
 - Enabling multiples transformations
 - Apply transformations on Smartphone then send them to Wear
 
-Community
---------
-
-Looking for contributors, feel free to fork !
-
-Wear
---------
-
-If you want to learn wear development : [http://tutos-android-france.com/developper-une-application-pour-les-montres-android-wear/][tuto_wear].
 
 Dependencies
 -------
@@ -169,26 +155,14 @@ Dependencies
 Changelog
 -------
 
-**1.0.2**
-- Bitmaps are now saved as PNG to preserve transparency
+**1.1.1**
+- Made runnable again
 
 Credits
 -------
 
 Author: Florent Champigny www.florentchampigny.com/
-
-<a href="https://plus.google.com/+florentchampigny">
-  <img alt="Follow me on Google+"
-       src="https://raw.githubusercontent.com/florent37/DaVinci/master/mobile/src/main/res/drawable-hdpi/gplus.png" />
-</a>
-<a href="https://twitter.com/florent_champ">
-  <img alt="Follow me on Twitter"
-       src="https://raw.githubusercontent.com/florent37/DaVinci/master/mobile/src/main/res/drawable-hdpi/twitter.png" />
-</a>
-<a href="https://www.linkedin.com/profile/view?id=297860624">
-  <img alt="Follow me on LinkedIn"
-       src="https://raw.githubusercontent.com/florent37/DaVinci/master/mobile/src/main/res/drawable-hdpi/linkedin.png" />
-</a>
+Updated by: MDXDave https://mdxdave.de 
 
 
 Pictures by Logan Bourgouin

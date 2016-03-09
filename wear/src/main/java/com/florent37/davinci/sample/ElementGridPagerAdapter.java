@@ -7,11 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.FragmentGridPagerAdapter;
 
-import com.github.florent37.davinci.DaVinci;
-import com.github.florent37.davinci.transformation.BlurTransformation;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import de.mdxdave.WearImageLoader.WearImageLoader;
+import de.mdxdave.WearImageLoader.transformation.BlurTransformation;
 
 public class ElementGridPagerAdapter extends FragmentGridPagerAdapter {
 
@@ -44,9 +44,9 @@ public class ElementGridPagerAdapter extends FragmentGridPagerAdapter {
     public Drawable getBackgroundForRow(final int row) {
         //return DaVinci.with(mContext).load("/image/0").into(this, row);
         if(row%2==0) {
-            return DaVinci.with(mContext).load(elementList.get(row).getUrl()).transform(new BlurTransformation()).into(this, row);
+            return WearImageLoader.with(mContext).load(elementList.get(row).getUrl()).transform(new BlurTransformation()).into(this, row);
         }else
-            return DaVinci.with(mContext).load(elementList.get(row).getUrl()).into(this, row);
+            return WearImageLoader.with(mContext).load(elementList.get(row).getUrl()).into(this, row);
     }
 
     @Override

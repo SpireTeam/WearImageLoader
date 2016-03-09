@@ -3,13 +3,10 @@ package com.florent37.davinci.sample;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.github.florent37.davinci.daemon.DaVinciDaemon;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -19,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import de.mdxdave.WearImageLoader.daemon.WearImageLoaderDaemon;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -49,7 +47,7 @@ public class WearService extends WearableListenerService implements GoogleApiCli
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
-        DaVinciDaemon.with(getApplicationContext()).handleMessage(messageEvent);
+        WearImageLoaderDaemon.with(getApplicationContext()).handleMessage(messageEvent);
 
         ConnectionResult connectionResult = mApiClient.blockingConnect(30, TimeUnit.SECONDS);
 
@@ -118,7 +116,7 @@ public class WearService extends WearableListenerService implements GoogleApiCli
             Wearable.DataApi.putDataItem(mApiClient, putDataMapRequest.asPutDataRequest());
 
         for(int position = 0; position < elements.size(); ++position){
-            DaVinciDaemon.with(getApplicationContext()).load(elements.get(position).getUrl()).send();
+            WearImageLoaderDaemon.with(getApplicationContext()).load(elements.get(position).getUrl()).send();
         }
     }
 

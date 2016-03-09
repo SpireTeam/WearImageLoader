@@ -8,7 +8,6 @@ import android.support.wearable.view.GridViewPager;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.github.florent37.davinci.DaVinci;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
@@ -25,6 +24,8 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.mdxdave.WearImageLoader.WearImageLoader;
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MessageApi.MessageListener, DataApi.DataListener {
 
@@ -51,7 +52,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
         mImageView = (ImageView) findViewById(R.id.imageWithTransparency);
 
-        DaVinci.with(this).load("http://www.seomofo.com/downloads/new-google-logo-knockoff.png").into(mImageView);
+        WearImageLoader.with(this).load("http://www.seomofo.com/downloads/new-google-logo-knockoff.png").into(mImageView);
     }
 
     /**

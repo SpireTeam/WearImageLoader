@@ -1,8 +1,5 @@
 package com.florent37.davinci.sample;
 
-/**
- * Created by florentchampigny on 19/03/15.
- */
 public class Element {
 
     private String titre;
