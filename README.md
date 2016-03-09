@@ -122,24 +122,26 @@ WearImageLoader.with(context).load(url).transform(new ResizeTransformation(maxWi
 
 Include
 -------
+Add in your root build.gradle at the end of repositories
+
+```groovy
+allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+```
 
 
 In your wear module
 ```groovy
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
 compile 'de.mdxdave.WearImageLoader:WearImageLoader:1.1.1';
 ```
 
 In your smartphone module 
 ```groovy
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
-compile 'de.mdxdave.WearImageLoader:Daemon:1.1.1';
+compile 'de.mdxdave.WearImageLoader:WearImageLoaderDaemon:1.1.1';
 ```
 
 Don't forget to add WRITE_EXTERNAL_STORAGE in your Wear AndroidManifest.xml
