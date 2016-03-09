@@ -120,16 +120,25 @@ WearImageLoader.with(context).load(url).transform(new BlurTransformation()).into
 WearImageLoader.with(context).load(url).transform(new ResizeTransformation(maxWidth)).into(imageView);
 ```
 
-Download
---------
+Include
+-------
+
 
 In your wear module
 ```groovy
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 compile 'de.mdxdave.WearImageLoader:WearImageLoader:1.1.1';
 ```
 
 In your smartphone module 
 ```groovy
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 compile 'de.mdxdave.WearImageLoader:Daemon:1.1.1';
 ```
 
