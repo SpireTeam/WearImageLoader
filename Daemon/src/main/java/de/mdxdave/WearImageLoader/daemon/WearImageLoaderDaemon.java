@@ -18,6 +18,7 @@ import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -25,14 +26,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class WearImageLoaderDaemon implements GoogleApiClient.ConnectionCallbacks, MessageApi.MessageListener, DataApi.DataListener, GoogleApiClient.OnConnectionFailedListener {
 
     private final static String TAG = WearImageLoaderDaemon.class.getCanonicalName();
 
     private Context mContext;
+    private String mAuthHeaderToken;
     private GoogleApiClient mApiClient;
     private CallBack mCallBack;
     private String mUrl;
+    private OkHttpClient mHttpClient;
+    private OkHttp3Downloader mDownloader;
+    private Picasso mPicasso;
 
     private static final String DEFAULT_PATH = "/WearImageLoader/";
     private String imageAssetName = "image";
@@ -52,14 +62,38 @@ public class WearImageLoaderDaemon implements GoogleApiClient.ConnectionCallback
                 .build();
 
         mApiClient.connect();
+
+        mHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request.Builder requestBuilder = chain.request().newBuilder();
+
+                        Log.d("TESTING STUFF", chain.request().url().host());
+                        if (mAuthHeaderToken != null && chain.request().url().host().contains("spire.fit")) {
+                            requestBuilder.addHeader("Authorization", "Bearer " + mAuthHeaderToken);
+                        }
+
+                        return chain.proceed(requestBuilder.build());
+                    }
+                }).build();
+
+        mDownloader = new OkHttp3Downloader(mHttpClient);
+
+        mPicasso = new Picasso.Builder(mContext).downloader(mDownloader).build();
         //TODO disconnect when the application close
     }
 
-    public static WearImageLoaderDaemon with(Context context) {
-        if (INSTANCE == null)
+    public static WearImageLoaderDaemon with(Context context, String authHeaderToken) {
+        if (INSTANCE == null) {
             INSTANCE = new WearImageLoaderDaemon(context);
-        if (context != null)
+        }
+
+        if (context != null) {
             INSTANCE.mContext = context;
+            INSTANCE.mAuthHeaderToken = authHeaderToken;
+        }
+
         return INSTANCE;
     }
 
@@ -96,26 +130,26 @@ public class WearImageLoaderDaemon implements GoogleApiClient.ConnectionCallback
     }
 
     private void sendImage(final String url, final String path) {
-        Picasso.with(mContext)
-                .load(url)
-                .transform(new ResizeTransformation(300))
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Log.d(TAG, "Picasso " + url + " loaded");
-                        sentBitmap(bitmap, url, path);
-                    }
+        mPicasso
+            .load(url)
+            .transform(new ResizeTransformation(300))
+            .into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    Log.d(TAG, "Picasso " + url + " loaded");
+                    sentBitmap(bitmap, url, path);
+                }
 
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        Log.d(TAG, "Picasso " + url + " failed");
-                    }
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+                    Log.d(TAG, "Picasso " + url + " failed");
+                }
 
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                    }
-                });
+                }
+            });
     }
 
     private String generatePath(final String url, final String path) {
