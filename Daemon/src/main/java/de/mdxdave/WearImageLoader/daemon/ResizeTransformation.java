@@ -14,6 +14,11 @@ public class ResizeTransformation implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {
         double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
+
+        if (source.getWidth() <= targetWidth) {
+            return source;
+        }
+
         int targetHeight = (int) (targetWidth * aspectRatio);
         Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
         if (result != source) {
